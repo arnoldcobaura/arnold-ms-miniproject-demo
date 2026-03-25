@@ -1,0 +1,14 @@
+// PASO 3b: BUILD DEL MÓDULO REPOSITORY
+// Adaptador de infraestructura - implementa ProductGateway
+// Aquí va la implementación real (BD, Redis, archivo, etc.)
+
+dependencies {
+    // Depende del modelo para implementar ProductGateway
+    implementation project(':model')
+    
+    // Reactor para programación reactiva
+    implementation 'io.projectreactor:reactor-core'
+    
+    // Spring Context para @Component
+    implementation 'org.springframework:spring-context'
+}

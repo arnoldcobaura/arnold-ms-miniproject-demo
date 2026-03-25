@@ -1,0 +1,21 @@
+// PASO 3d: BUILD DEL MÓDULO APP-SERVICE
+// Aplicación principal - ensambla todos los módulos
+// Único módulo que aplica el plugin Spring Boot
+
+plugins {
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    // Todos los módulos del proyecto
+    implementation project(':model')
+    implementation project(':usecase')
+    implementation project(':repository')
+    implementation project(':reactive-web')
+    
+    // Spring Boot WebFlux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    
+    // DevTools para hot reload en desarrollo
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+}

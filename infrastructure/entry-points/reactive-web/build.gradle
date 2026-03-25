@@ -1,0 +1,12 @@
+// PASO 3c: BUILD DEL MÓDULO REACTIVE-WEB
+// Punto de entrada - API REST con WebFlux
+// Expone los casos de uso como endpoints HTTP
+
+dependencies {
+    // Depende del modelo y casos de uso
+    implementation project(':model')
+    implementation project(':usecase')
+    
+    // Spring WebFlux para API REST reactiva
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+}

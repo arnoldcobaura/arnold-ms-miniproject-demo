@@ -1,0 +1,11 @@
+// PASO 3a: BUILD DEL MÓDULO USECASE
+// Módulo del dominio - lógica de negocio
+// Depende de :model pero NO de infraestructura
+
+dependencies {
+    // Depende del modelo (entidades y puertos)
+    implementation project(':model')
+    
+    // Reactor para programación reactiva
+    implementation 'io.projectreactor:reactor-core'
+}

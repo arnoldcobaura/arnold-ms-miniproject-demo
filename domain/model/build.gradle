@@ -1,0 +1,8 @@
+// PASO 2: BUILD DEL MÓDULO MODEL
+// Módulo del dominio - solo entidades y puertos (interfaces)
+// NO tiene dependencias de Spring ni frameworks externos
+
+dependencies {
+    // Reactor para programación reactiva (Mono, Flux)
+    implementation 'io.projectreactor:reactor-core'
+}

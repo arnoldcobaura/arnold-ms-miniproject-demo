@@ -1,0 +1,17 @@
+# PASO 9: CONFIGURACIÓN DE LA APLICACIÓN
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: arnold-ms-miniproject-demo
+
+logging:
+  level:
+    root: INFO
+    com.empresa: DEBUG
+
+spring.devtools:
+  restart:
+    enabled: true

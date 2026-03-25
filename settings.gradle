@@ -1,1 +1,22 @@
+// PASO 1: CONFIGURACIÓN DE MÓDULOS - CLEAN ARCHITECTURE
+// Define la estructura de módulos del proyecto
+
 rootProject.name = 'arnold-ms-miniproject-demo'
+
+// Módulos del dominio (lógica de negocio pura)
+include ':model'
+include ':usecase'
+
+// Módulos de infraestructura (adaptadores)
+include ':repository'
+include ':reactive-web'
+
+// Aplicación (punto de entrada)
+include ':app-service'
+
+// Mapeo de rutas físicas
+project(':model').projectDir = file('./domain/model')
+project(':usecase').projectDir = file('./domain/usecase')
+project(':repository').projectDir = file('./infrastructure/driven-adapters/repository')
+project(':reactive-web').projectDir = file('./infrastructure/entry-points/reactive-web')
+project(':app-service').projectDir = file('./applications/app-service')

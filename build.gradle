@@ -1,38 +1,57 @@
+// PASO 2: BUILD RAÍZ - CONFIGURACIÓN COMÚN PARA TODOS LOS MÓDULOS
+// Define plugins y dependencias comunes
+// El plugin Spring Boot se aplica solo en app-service (apply false)
+
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.12'
-	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.boot' version '3.5.12' apply false
+	id 'io.spring.dependency-management' version '1.1.7' apply false
 }
 
 group = 'com.empresa'
 version = '0.0.1-SNAPSHOT'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+// Configuración para todos los subproyectos
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'io.spring.dependency-management'
+	
+	group = 'com.empresa'
+	version = '0.0.1-SNAPSHOT'
+	
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
 	}
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
+	
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
 	}
-}
-
-repositories {
-	mavenCentral()
-}
-
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.projectreactor:reactor-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
+	
+	repositories {
+		mavenCentral()
+	}
+	
+	// Dependencias comunes para todos los módulos
+	dependencies {
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+		
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation 'io.projectreactor:reactor-test'
+		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	}
+	
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.12"
+		}
+	}
+	
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
 }
