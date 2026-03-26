@@ -6,51 +6,52 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * PASO 7: ADAPTADOR DE REPOSITORIO - IMPLEMENTACIÓN DEL PUERTO
  * 
  * Implementa ProductGateway (puerto del dominio)
- * En este caso, usa una BD en memoria (Map)
- * En producción, sería una BD real (MongoDB, PostgreSQL, etc.)
+ * RONDA 2: Ahora usa MongoDB en lugar de BD en memoria
+ * 
+ * Delega todas las operaciones a ProductMongoRepository
+ * Spring Data genera automáticamente las implementaciones
  */
 @Component
 public class ProductRepositoryAdapter implements ProductGateway {
     
-    private final Map<String, Product> database = new ConcurrentHashMap<>();
+    private final ProductMongoRepository mongoRepository;
+    
+    public ProductRepositoryAdapter(ProductMongoRepository mongoRepository) {
+        this.mongoRepository = mongoRepository;
+    }
     
     @Override
     public Mono<Product> findById(String id) {
-        return Mono.fromCallable(() -> database.get(id))
-                .flatMap(product -> product != null ? Mono.just(product) : Mono.empty());
+        return mongoRepository.findById(id);
     }
     
     @Override
     public Flux<Product> findAll() {
-        return Flux.fromIterable(database.values());
+        return mongoRepository.findAll();
     }
     
     @Override
     public Mono<Product> save(Product product) {
-        return Mono.fromCallable(() -> {
-            if (product.getId() == null || product.getId().isEmpty()) {
-                product.setId(UUID.randomUUID().toString());
-            }
-            database.put(product.getId(), product);
-            return product;
-        });
+        // Si no tiene ID, generar uno
+        if (product.getId() == null || product.getId().isEmpty()) {
+            product.setId(UUID.randomUUID().toString());
+        }
+        return mongoRepository.save(product);
     }
     
     @Override
     public Mono<Void> deleteById(String id) {
-        return Mono.fromRunnable(() -> database.remove(id));
+        return mongoRepository.deleteById(id);
     }
     
     @Override
     public Mono<Boolean> existsById(String id) {
-        return Mono.just(database.containsKey(id));
+        return mongoRepository.existsById(id);
     }
 }

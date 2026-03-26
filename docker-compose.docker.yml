@@ -1,0 +1,53 @@
+# RONDA 2: DOCKER COMPOSE - SERVICIOS LOCALES (Docker)
+# Levanta MongoDB y Mongo Express para desarrollo local
+# Usar este archivo si tienes Docker instalado
+
+version: '3.8'
+
+services:
+  # MongoDB - Base de datos NoSQL
+  mongodb:
+    image: mongo:7.0
+    container_name: arnold-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: arnold_products
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - arnold-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Mongo Express - UI para administrar MongoDB
+  mongo-express:
+    image: mongo-express:latest
+    container_name: arnold-mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin123
+      ME_CONFIG_MONGODB_URL: mongodb://admin:admin123@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - arnold-network
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+
+networks:
+  arnold-network:
+    driver: bridge

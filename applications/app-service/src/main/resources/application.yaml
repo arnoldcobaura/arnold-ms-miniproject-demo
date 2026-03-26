@@ -6,11 +6,18 @@ server:
 spring:
   application:
     name: arnold-ms-miniproject-demo
+  
+  # RONDA 2: Configuración de MongoDB
+  data:
+    mongodb:
+      uri: mongodb://admin:admin123@localhost:27017/arnold_products?authSource=admin
+      auto-index-creation: true
 
 logging:
   level:
     root: INFO
     com.empresa: DEBUG
+    org.springframework.data.mongodb: DEBUG
 
 spring.devtools:
   restart:

@@ -11,4 +11,7 @@ dependencies {
     
     // Spring Context para @Component
     implementation 'org.springframework:spring-context'
+    
+    // RONDA 2: Spring Data MongoDB para persistencia reactiva
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 }
