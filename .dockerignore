@@ -1,0 +1,15 @@
+.git
+.gitignore
+.gradle
+build
+.idea
+*.iml
+*.log
+.DS_Store
+node_modules
+docker-compose*.yml
+kubernetes/
+.github/
+README.md
+RONDA_*.md
+TEST_RESULTS_*.md
