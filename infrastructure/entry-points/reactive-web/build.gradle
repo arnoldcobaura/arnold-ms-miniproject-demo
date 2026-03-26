@@ -7,6 +7,12 @@ dependencies {
     implementation project(':model')
     implementation project(':usecase')
     
+    // RONDA 5a: Eventos asíncronos
+    implementation project(':async-event-bus')
+    
+    // RONDA 5c: Caching distribuido
+    implementation project(':redis-cache')
+    
     // Spring WebFlux para API REST reactiva
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     

@@ -1,0 +1,23 @@
+// RONDA 5a: ASYNC EVENT BUS - RABBITMQ
+// Módulo para manejo de eventos asíncronos con RabbitMQ
+
+dependencies {
+    implementation project(':model')
+    implementation project(':usecase')
+    
+    // RabbitMQ para eventos asíncronos
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    
+    // Reactor para programación reactiva
+    implementation 'io.projectreactor:reactor-core'
+    
+    // Jackson para serialización JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    // Logging
+    implementation 'org.slf4j:slf4j-api'
+}

@@ -10,6 +10,8 @@ include ':usecase'
 // Módulos de infraestructura (adaptadores)
 include ':repository'
 include ':reactive-web'
+include ':async-event-bus'
+include ':redis-cache'
 
 // Aplicación (punto de entrada)
 include ':app-service'
@@ -19,4 +21,6 @@ project(':model').projectDir = file('./domain/model')
 project(':usecase').projectDir = file('./domain/usecase')
 project(':repository').projectDir = file('./infrastructure/driven-adapters/repository')
 project(':reactive-web').projectDir = file('./infrastructure/entry-points/reactive-web')
+project(':redis-cache').projectDir = file('./infrastructure/driven-adapters/redis-cache')
+project(':async-event-bus').projectDir = file('./infrastructure/driven-adapters/async-event-bus')
 project(':app-service').projectDir = file('./applications/app-service')

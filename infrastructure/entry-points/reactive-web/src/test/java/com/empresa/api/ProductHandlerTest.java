@@ -1,5 +1,7 @@
 package com.empresa.api;
 
+import com.empresa.cache.ProductCacheService;
+import com.empresa.events.ProductEventPublisher;
 import com.empresa.model.Product;
 import com.empresa.usecase.ProductUseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,12 +13,16 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import jakarta.validation.Validator;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
  * RONDA 4b: TESTS UNITARIOS CON MOCKITO Y REACTOR TEST
+ * RONDA 5a: Tests para eventos asíncronos
+ * RONDA 5c: Tests para caching
  * 
  * Pruebas para ProductHandler usando StepVerifier
  */
@@ -26,12 +32,26 @@ class ProductHandlerTest {
     @Mock
     private ProductUseCase productUseCase;
     
+    @Mock
+    private Validator validator;
+    
+    @Mock
+    private ProductEventPublisher eventPublisher;
+    
+    @Mock
+    private ProductCacheService cacheService;
+    
     private ProductHandler productHandler;
     
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        productHandler = new ProductHandler(productUseCase, null);
+        when(eventPublisher.publishProductCreated(any())).thenReturn(Mono.empty());
+        when(eventPublisher.publishProductUpdated(any())).thenReturn(Mono.empty());
+        when(eventPublisher.publishProductDeleted(anyString())).thenReturn(Mono.empty());
+        when(cacheService.cacheProduct(any())).thenReturn(Mono.empty());
+        when(cacheService.invalidateProductCache(anyString())).thenReturn(Mono.empty());
+        productHandler = new ProductHandler(productUseCase, validator, eventPublisher, cacheService);
     }
     
     @Test

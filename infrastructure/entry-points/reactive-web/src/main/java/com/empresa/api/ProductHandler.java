@@ -1,5 +1,7 @@
 package com.empresa.api;
 
+import com.empresa.cache.ProductCacheService;
+import com.empresa.events.ProductEventPublisher;
 import com.empresa.model.Product;
 import com.empresa.usecase.ProductUseCase;
 import org.slf4j.Logger;
@@ -18,9 +20,12 @@ import java.util.stream.Collectors;
  * 
  * RONDA 3: Validación con Bean Validation
  * RONDA 4: Logging estructurado
+ * RONDA 5a: Eventos asíncronos con RabbitMQ
+ * RONDA 5c: Caching distribuido con Redis
  * 
  * Recibe peticiones HTTP y delega al caso de uso
  * Transforma respuestas del dominio a respuestas HTTP
+ * Publica eventos y cachea productos
  */
 public class ProductHandler {
     
@@ -28,10 +33,15 @@ public class ProductHandler {
     
     private final ProductUseCase productUseCase;
     private final Validator validator;
+    private final ProductEventPublisher eventPublisher;
+    private final ProductCacheService cacheService;
     
-    public ProductHandler(ProductUseCase productUseCase, Validator validator) {
+    public ProductHandler(ProductUseCase productUseCase, Validator validator, 
+                         ProductEventPublisher eventPublisher, ProductCacheService cacheService) {
         this.productUseCase = productUseCase;
         this.validator = validator;
+        this.eventPublisher = eventPublisher;
+        this.cacheService = cacheService;
     }
     
     public Mono<ServerResponse> getAllProducts(ServerRequest request) {
@@ -53,7 +63,6 @@ public class ProductHandler {
         return request.bodyToMono(Product.class)
                 .flatMap(product -> {
                     logger.debug("Validando producto: {}", product.getName());
-                    // Validar el producto
                     Set<ConstraintViolation<Product>> violations = validator.validate(product);
                     if (!violations.isEmpty()) {
                         String errors = violations.stream()
@@ -67,8 +76,11 @@ public class ProductHandler {
                 .flatMap(productUseCase::createProduct)
                 .flatMap(product -> {
                     logger.info("Producto creado exitosamente: {} (ID: {})", product.getName(), product.getId());
-                    return ServerResponse.status(201).bodyValue(product);
+                    return cacheService.cacheProduct(product)
+                            .then(eventPublisher.publishProductCreated(product))
+                            .then(Mono.just(product));
                 })
+                .flatMap(product -> ServerResponse.status(201).bodyValue(product))
                 .onErrorResume(e -> {
                     logger.error("Error al crear producto: {}", e.getMessage());
                     return ServerResponse.badRequest().bodyValue(e.getMessage());
@@ -96,9 +108,16 @@ public class ProductHandler {
     
     public Mono<ServerResponse> deleteProduct(ServerRequest request) {
         String id = request.pathVariable("id");
+        logger.info("DELETE /products/{} - Eliminando producto", id);
         return productUseCase.deleteProduct(id)
+                .then(cacheService.invalidateProductCache(id))
+                .then(eventPublisher.publishProductDeleted(id))
                 .then(ServerResponse.noContent().build())
-                .onErrorResume(e -> ServerResponse.badRequest().bodyValue(e.getMessage()));
+                .doOnSuccess(r -> logger.info("Producto eliminado exitosamente: {}", id))
+                .onErrorResume(e -> {
+                    logger.error("Error al eliminar producto: {}", e.getMessage());
+                    return ServerResponse.badRequest().bodyValue(e.getMessage());
+                });
     }
     
     public Mono<ServerResponse> getExpensiveProducts(ServerRequest request) {

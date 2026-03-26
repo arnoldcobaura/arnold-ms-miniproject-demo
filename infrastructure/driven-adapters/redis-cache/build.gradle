@@ -1,0 +1,20 @@
+// RONDA 5c: REDIS CACHE
+// Módulo para caching distribuido con Redis
+
+dependencies {
+    implementation project(':model')
+    
+    // Redis para caching
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'io.lettuce:lettuce-core'
+    
+    // Jackson para serialización
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    // Logging
+    implementation 'org.slf4j:slf4j-api'
+}

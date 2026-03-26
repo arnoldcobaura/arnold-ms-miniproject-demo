@@ -12,6 +12,8 @@ dependencies {
     implementation project(':usecase')
     implementation project(':repository')
     implementation project(':reactive-web')
+    implementation project(':async-event-bus')
+    implementation project(':redis-cache')
     
     // Spring Boot WebFlux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -34,4 +36,11 @@ dependencies {
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.mockito:mockito-junit-jupiter'
+    
+    // RONDA 5a: RabbitMQ para eventos asíncronos
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    
+    // RONDA 5c: Redis para caching
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'io.lettuce:lettuce-core'
 }

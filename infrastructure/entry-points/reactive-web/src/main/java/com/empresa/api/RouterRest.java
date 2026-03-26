@@ -1,6 +1,8 @@
 package com.empresa.api;
 
 import com.empresa.api.doc.ProductOpenApi;
+import com.empresa.cache.ProductCacheService;
+import com.empresa.events.ProductEventPublisher;
 import com.empresa.model.Product;
 import com.empresa.model.gateway.ProductGateway;
 import com.empresa.usecase.ProductUseCase;
@@ -17,6 +19,8 @@ import jakarta.validation.Validator;
  * 
  * RONDA 3: Configuración de validación
  * RONDA 4: Documentación OpenAPI/Swagger con SpringdocRouteBuilder
+ * RONDA 5a: Eventos asíncronos con RabbitMQ
+ * RONDA 5c: Caching distribuido con Redis
  * 
  * Mapea URLs a handlers
  * Configura los beans necesarios (inyección de dependencias)
@@ -30,8 +34,9 @@ public class RouterRest {
     }
     
     @Bean
-    public ProductHandler productHandler(ProductUseCase productUseCase, Validator validator) {
-        return new ProductHandler(productUseCase, validator);
+    public ProductHandler productHandler(ProductUseCase productUseCase, Validator validator,
+                                        ProductEventPublisher eventPublisher, ProductCacheService cacheService) {
+        return new ProductHandler(productUseCase, validator, eventPublisher, cacheService);
     }
     
     @Bean
