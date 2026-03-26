@@ -8,8 +8,12 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import jakarta.validation.Validator;
+
 /**
  * PASO 8b: ROUTER - DEFINE LAS RUTAS HTTP
+ * 
+ * RONDA 3: Configuración de validación
  * 
  * Mapea URLs a handlers
  * Configura los beans necesarios (inyección de dependencias)
@@ -23,8 +27,8 @@ public class RouterRest {
     }
     
     @Bean
-    public ProductHandler productHandler(ProductUseCase productUseCase) {
-        return new ProductHandler(productUseCase);
+    public ProductHandler productHandler(ProductUseCase productUseCase, Validator validator) {
+        return new ProductHandler(productUseCase, validator);
     }
     
     @Bean

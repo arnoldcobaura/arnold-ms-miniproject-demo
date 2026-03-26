@@ -9,4 +9,7 @@ dependencies {
     
     // Spring WebFlux para API REST reactiva
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    
+    // RONDA 3: Jakarta Validation para validaciones
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }

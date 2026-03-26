@@ -5,4 +5,7 @@
 dependencies {
     // Reactor para programación reactiva (Mono, Flux)
     implementation 'io.projectreactor:reactor-core'
+    
+    // RONDA 3: Jakarta Validation API (Bean Validation)
+    implementation 'jakarta.validation:jakarta.validation-api'
 }
