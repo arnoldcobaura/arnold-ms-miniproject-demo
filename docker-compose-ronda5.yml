@@ -62,10 +62,32 @@ services:
     networks:
       - arnold-network
 
+  # RONDA 6: LocalStack (AWS local) - Basado en configuración de Deposits
+  localstack:
+    image: localstack/localstack:0.12.7
+    container_name: arnold-localstack
+    ports:
+      - "4566-4599:4566-4599"  # Puertos de los diferentes servicios
+      - "9000:9000"            # LocalStack Web UI
+    environment:
+      - SERVICES=s3,kms,secretsmanager,dynamodb
+      - DEFAULT_REGION=us-east-1
+      - DATA_DIR=/tmp/localstack/data
+      - PORT_WEB_UI=9000
+      - LAMBDA_EXECUTOR=local
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - START_WEB=1
+    volumes:
+      - localstack_data:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - arnold-network
+
 volumes:
   mongodb_data:
   rabbitmq_data:
   redis_data:
+  localstack_data:
 
 networks:
   arnold-network:

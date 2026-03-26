@@ -1,0 +1,66 @@
+# RONDA 6: Configuración Local con LocalStack
+spring:
+  application:
+    name: arnold-products
+  profiles:
+    active: local
+
+  # MongoDB (local)
+  data:
+    mongodb:
+      uri: mongodb://admin:admin123@localhost:27017/arnold_products
+
+  # RabbitMQ (local)
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  # Redis (local)
+  redis:
+    host: localhost
+    port: 6379
+
+# RONDA 6: AWS LocalStack Configuration
+aws:
+  region: us-east-1
+  dynamodb:
+    local:
+      enabled: true
+      endpoint: http://localhost:4566
+      table-name: arnold-products-audit
+  secretsmanager:
+    local:
+      enabled: true
+      endpoint: http://localhost:4566
+  s3:
+    local:
+      enabled: true
+      endpoint: http://localhost:4566
+      bucket: arnold-products-reports
+  credentials:
+    access-key-id: test
+    secret-access-key: test
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.empresa: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - [%thread] %-5level %logger{36} - %msg%n"
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,info
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
