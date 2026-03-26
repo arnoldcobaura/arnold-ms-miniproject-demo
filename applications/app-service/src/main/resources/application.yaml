@@ -13,11 +13,42 @@ spring:
       uri: mongodb://admin:admin123@localhost:27017/arnold_products?authSource=admin
       auto-index-creation: true
 
+# RONDA 4a: OpenAPI/Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+
+# RONDA 4c: Logging estructurado
 logging:
   level:
     root: INFO
     com.empresa: DEBUG
     org.springframework.data.mongodb: DEBUG
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/arnold-ms-miniproject-demo.log
+
+# RONDA 4d: Métricas
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
 
 spring.devtools:
   restart:

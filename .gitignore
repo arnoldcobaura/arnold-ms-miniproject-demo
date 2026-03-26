@@ -35,3 +35,4 @@ out/
 
 ### VS Code ###
 .vscode/
+applications/app-service/logs/arnold-ms-miniproject-demo.log

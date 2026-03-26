@@ -18,4 +18,20 @@ dependencies {
     
     // DevTools para hot reload en desarrollo
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    
+    // RONDA 4a: OpenAPI/Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.2'
+    
+    // RONDA 4c: Logging estructurado
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    
+    // RONDA 4d: Métricas con Micrometer
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    
+    // RONDA 4b: Tests
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
 }

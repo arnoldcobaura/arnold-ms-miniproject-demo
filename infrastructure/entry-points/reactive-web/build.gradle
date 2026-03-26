@@ -12,4 +12,7 @@ dependencies {
     
     // RONDA 3: Jakarta Validation para validaciones
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    
+    // RONDA 4a: OpenAPI/Swagger
+    implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.8.0'
 }
