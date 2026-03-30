@@ -61,6 +61,100 @@ Clean Architecture (6 capas)
 └── Helpers (Logging, Commons)
 ```
 
+## 🆕 Crear Proyecto Desde Cero
+
+### Paso 1: Spring Initializr
+Ve a **https://start.spring.io/** y configura:
+
+- **Project**: Gradle Project
+- **Language**: Java
+- **Spring Boot**: 3.5.12
+- **Group**: com.empresa
+- **Artifact**: arnold-ms-miniproject-demo
+- **Packaging**: Jar
+- **Java**: 17
+- **Dependencies**: 
+  - Spring Reactive Web
+  - Lombok
+  - Spring Data Redis
+
+### Paso 2: Configurar Multi-módulos
+Reemplaza el contenido de **settings.gradle**:
+
+```gradle
+rootProject.name = 'arnold-ms-miniproject-demo'
+
+// Módulos del dominio (lógica de negocio pura)
+include ':model'
+include ':usecase'
+
+// Módulos de infraestructura (adaptadores)
+include ':repository'
+include ':reactive-web'
+include ':async-event-bus'
+include ':redis-cache'
+
+// Aplicación (punto de entrada)
+include ':app-service'
+
+// Mapeo de rutas físicas
+project(':model').projectDir = file('./domain/model')
+project(':usecase').projectDir = file('./domain/usecase')
+project(':repository').projectDir = file('./infrastructure/driven-adapters/repository')
+project(':reactive-web').projectDir = file('./infrastructure/entry-points/reactive-web')
+project(':redis-cache').projectDir = file('./infrastructure/driven-adapters/redis-cache')
+project(':async-event-bus').projectDir = file('./infrastructure/driven-adapters/async-event-bus')
+project(':app-service').projectDir = file('./applications/app-service')
+```
+
+### Paso 3: Configurar Build Raíz
+Modifica **build.gradle** principal:
+
+```gradle
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.12' apply false
+    id 'io.spring.dependency-management' version '1.1.7' apply false
+}
+
+group = 'com.empresa'
+version = '0.0.1-SNAPSHOT'
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    
+    group = 'com.empresa'
+    version = '0.0.1-SNAPSHOT'
+    
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+    
+    repositories {
+        mavenCentral()
+    }
+    
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
+}
+```
+
+### Paso 4: Crear Estructura de Carpetas
+```bash
+mkdir -p domain/model domain/usecase
+mkdir -p applications/app-service
+mkdir -p infrastructure/entry-points/reactive-web
+mkdir -p infrastructure/driven-adapters/{repository,redis-cache,async-event-bus}
+```
+
+### Paso 5: Crear build.gradle de cada módulo
+Crea un **build.gradle** básico en cada carpeta de módulo con las dependencias específicas.
+
 ## ✨ Características
 
 - ✅ **Spring Boot 3** con WebFlux reactivo
