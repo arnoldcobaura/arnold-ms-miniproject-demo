@@ -76,7 +76,6 @@ Ve a **https://start.spring.io/** y configura:
 - **Dependencies**: 
   - Spring Reactive Web
   - Lombok
-  - Spring Data Redis
 
 ### Paso 2: Configurar Multi-módulos
 Reemplaza el contenido de **settings.gradle**:
